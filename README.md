@@ -18,10 +18,8 @@ CakeIt will be a mobile app where:
 - **Bakeries** that need a better system to manage orders and communicate with clients.
 
 ## 4. Tools & Technologies
-- **Framework**: Flutter for cross-platform mobile development.
-- **Backend**: Firebase (real-time database & authentication).
-- **Messaging**: Firebase Cloud Messaging for bakery-customer communication.
-- **Easybox System**: Database for managing shared pickup slot reservations.
+<img width="452" alt="image" src="https://github.com/user-attachments/assets/8fc6d259-b55a-459f-a67b-f89ca31be116">
+
 
 ## 5. Timeline & Milestones
 - **Week 3**: Requirements Gathering & Design.
