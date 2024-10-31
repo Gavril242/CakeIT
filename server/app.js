@@ -1,18 +1,25 @@
-const express = require('express'); // Import Express
-const connectDB = require('./config/db'); // Import MongoDB connection function
-const cors = require('cors'); // Import CORS for cross-origin requests
-require('dotenv').config(); // Load environment variables
+const mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+require('dotenv').config();
 
-const app = express(); // Initialize Express app
-connectDB(); // Connect to MongoDB
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB connection error:", err));
 
-// Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Enable JSON parsing for incoming requests
+// Import models
+const Client = require('./models/Client');
+const Bakery = require('./models/Bakery');
+const Product = require('./models/Product');
+const Order = require('./models/Order');
+const EasyboxReservation = require('./models/EasyBoxReservation');
 
-// Test route
-app.get('/', (req, res) => res.send('Server is up and running'));
+const orderRoutes = require('./routes/rderRoutes'); // Import order routes
 
-// Server Port
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Use routes
+app.use('/api/orders', orderRoutes); // Routes for orders
+
+app.listen(3000, () => console.log("Server running on port 3000"));
