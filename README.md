@@ -4,6 +4,7 @@ Your favorite bakery, and more, just a tap away!
 ![image](https://github.com/user-attachments/assets/b9c52f98-b5eb-471e-a5ce-310456237b65)
 
 ## Project Proposal
+
 ### 1. Problem Statement
 In our town, there is no centralized platform for customers to easily view offerings from multiple bakeries, place custom orders, or arrange convenient delivery or pickup. Bakeries, in turn, lack a platform to manage orders, especially custom ones, and to communicate directly with customers.
 
@@ -18,7 +19,12 @@ CakeIt will be a mobile app where:
 - **Bakeries** that need a better system to manage orders and communicate with clients.
 
 ### 4. Tools & Technologies
-<img width="452" alt="image" src="https://github.com/user-attachments/assets/8fc6d259-b55a-459f-a67b-f89ca31be116">
+
+- **Frontend**: React for building interactive user interfaces.
+- **Backend**: Node.js with Express to handle server-side logic and API creation.
+- **Database**: MongoDB for flexible, document-based data handling.
+- **State Management**: Context API or Redux (if needed) for managing app-wide state in React.
+- **HTTP Client**: Axios for communication between the frontend and backend.
 
 ### 5. Timeline & Milestones
 - **Week 3**: Requirements Gathering & Design.
@@ -35,7 +41,7 @@ CakeIt will be a mobile app where:
 - Browse through multiple bakeries and their products.
 - Place standard or custom cake orders.
 - Communicate with bakeries via a message thread.
-- Choose delivery, in-store collection, or pickup from shared easybox.
+- Choose delivery, in-store collection, or pickup from a shared easybox.
 - View real-time availability of easybox slots and reserve one.
 - Receive notifications for order updates (accepted, declined, modified).
 
@@ -64,7 +70,7 @@ CakeIt will be a mobile app where:
 #### Security:
 - All sensitive data must be encrypted, and only authenticated users should access their roles.
 
-### 3.Techniques to Gather Requirements
+### 3. Techniques to Gather Requirements
 
 #### Use Cases/User Stories
 - **Customer**: “As a customer, I want to browse bakeries and place a custom order.”
@@ -80,7 +86,6 @@ CakeIt will be a mobile app where:
 #### Workshops & Focus Groups
 - Host workshops with bakery owners to co-design the order management interface.
 - Organize focus groups with customers to refine the app’s user experience.
-- **Example**: Bakery owners test a prototype of order management and easybox reservations.
 
 #### Surveys & Questionnaires
 - Distribute surveys to gather broad user preferences.
@@ -88,45 +93,46 @@ CakeIt will be a mobile app where:
   - For customers: “How often would you use an easybox for pickup?”
   - For bakeries: “Would you prefer real-time notifications for new/updated orders?”
 
-## High-Level Architecture:
-### Monolithic Architecture for CakeIt
+## High-Level Architecture
+### MERN Stack Architecture for CakeIt
 
 #### Architecture Overview
-- **Single Codebase**: All components (mobile app, backend logic, database) are integrated into one application.
+- **Full Stack JavaScript**: Using JavaScript across the entire stack (React, Node.js, Express, MongoDB) for a unified codebase.
 
 #### Components
 
 ##### Mobile App
-- **Framework**: React Native.
+- **Framework**: React (or React Native if developing for mobile).
 - **User Roles**:
-  - **Customer**: Browse bakeries, place orders, communicate.
+  - **Customer**: Browse bakeries, place orders, communicate with bakeries.
   - **Bakery**: Manage products and orders.
   - **Admin**: Monitor orders and manage easybox reservations.
 
 ##### Backend Logic
-- **Framework**: Firebase Cloud Functions for business logic (e.g., order processing, user authentication).
-
+- **Framework**: Node.js with Express for creating RESTful APIs that handle business logic (e.g., order processing, user authentication).
+  
 ##### Database
-- **Service**: Firebase Firestore or Realtime Database for storing user and order data.
+- **Service**: MongoDB for storing user and order data in a flexible, schema-less format.
 
 ##### Real-Time Communication
-- **Service**: Firebase Cloud Messaging for notifications.
+- **Notifications**: Use WebSockets or a notification service like Firebase Cloud Messaging for real-time notifications (optional).
 
 #### Component Interactions
-- Users interact with the mobile app, triggering Firebase Cloud Functions.
-- Cloud Functions read/write data from Firestore and send notifications via Firebase Cloud Messaging.
+- **Frontend-Backend Communication**: Axios is used on the frontend to send HTTP requests to the backend Express API.
+- **Database Interaction**: Backend communicates with MongoDB for CRUD operations on user data, order data, and easybox reservations.
 
 #### Deployment
-- **Hosting**: Use Firebase Hosting for the frontend and Firebase services for backend functionality.
+- **Hosting**: Deploy the backend on a server (e.g., AWS, Heroku) and the React frontend on a service like Vercel or Netlify.
 - **CI/CD**: Automate deployments with tools like GitHub Actions.
 
 #### Development Steps
-1. **Set Up React Native Project**.
-2. **Integrate Firebase**: Firestore for data, Authentication for user management, Cloud Functions for logic.
-3. **Implement Features**: Develop UIs for all user roles and add real-time functionalities.
-4. **Testing**: Ensure all features function correctly.
-5. **Deployment**: Deploy to Firebase Hosting.
+1. **Set Up React Project for Frontend**: Create components and pages for each user role.
+2. **Implement Backend APIs**: Use Express to set up routes for customers, bakeries, and admin functionalities.
+3. **Connect MongoDB Database**: Set up Mongoose models for users, orders, and easybox reservations.
+4. **Add Real-Time Features**: Integrate notifications for order updates and easybox availability.
+5. **Testing**: Ensure all features function correctly across all user roles.
+6. **Deployment**: Deploy both the backend and frontend to respective hosting services.
 
 #### Benefits
-- **Simplicity**: Easy to develop and maintain due to a single application structure.
-- **Faster Iteration**: Quick development cycles with reduced complexity.
+- **Unified Codebase**: JavaScript across frontend, backend, and database makes development faster and easier to maintain.
+- **Scalability**: The MERN stack allows for easy expansion of features and scaling of each layer independently.
