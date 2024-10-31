@@ -1,11 +1,13 @@
 # CakeIT
 Your favorite bakery, and more, just a tap away!
 
-![image](https://github.com/user-attachments/assets/b9c52f98-b5eb-471e-a5ce-310456237b65)
+![black_on_white](https://github.com/user-attachments/assets/d5de7150-46e2-446b-b9d2-5af983e66480)
+
+
 
 ## Project Proposal
 
-### 1. Problem Statementt
+### 1. Problem Statement
 In our town, there is no centralized platform for customers to easily view offerings from multiple bakeries, place custom orders, or arrange convenient delivery or pickup. Bakeries, in turn, lack a platform to manage orders, especially custom ones, and to communicate directly with customers.
 
 ### 2. Proposed Solution
