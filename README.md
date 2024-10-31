@@ -5,7 +5,7 @@ Your favorite bakery, and more, just a tap away!
 
 ## Project Proposal
 
-### 1. Problem Statement
+### 1. Problem Statementt
 In our town, there is no centralized platform for customers to easily view offerings from multiple bakeries, place custom orders, or arrange convenient delivery or pickup. Bakeries, in turn, lack a platform to manage orders, especially custom ones, and to communicate directly with customers.
 
 ### 2. Proposed Solution
