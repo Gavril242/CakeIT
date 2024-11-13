@@ -3,14 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@radix-ui/react-toast": "^1.2.2",
+    "@react-spring/web": "^9.7.5",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "framer-motion": "^11.11.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "react-tsparticles": "^2.12.2",
+    "sass": "^1.80.7",
+    "tsparticles": "^3.5.0",
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
