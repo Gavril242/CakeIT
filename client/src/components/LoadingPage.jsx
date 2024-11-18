@@ -12,9 +12,9 @@ export default function LoadingPage() {
   }, [setChargeProps])
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-white">
+    <div className="min-h-screen  flex flex-col items-center justify-center text-white">
       <h1 className="text-3xl font-bold mb-8">Loading...</h1>
-      <div className="w-64 h-8 bg-gray-800 rounded-full overflow-hidden">
+      <div className="w-64 h-8  rounded-full overflow-hidden">
         <animated.div
           style={chargeProps}
           className="h-full bg-gradient-to-r from-blue-500 to-purple-500"

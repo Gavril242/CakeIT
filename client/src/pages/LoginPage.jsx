@@ -20,7 +20,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen  text-white flex items-center justify-center px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">
@@ -38,7 +38,7 @@ export default function LoginPage() {
               type="email"
               autoComplete="email"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -49,7 +49,7 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

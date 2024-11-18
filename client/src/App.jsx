@@ -78,7 +78,7 @@ function App() {
         <main className="flex-grow">
           <AnimatedRoutes />
         </main>
-        <footer className="py-4 text-center bg-opacity-50 bg-gray-800 text-white">
+        <footer className="py-4 text-center  text-white">
           <p>&copy; 2024 Bakery Connect. All rights reserved.</p>
         </footer>
       </div>

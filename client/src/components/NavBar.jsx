@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function NavBar() {
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated, setIsAuthenticated } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    navigate('/');
-  };
+    setIsAuthenticated(false)
+    navigate('/')
+  }
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg">
+    <nav className="bg-white text-black shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
@@ -22,7 +22,7 @@ export default function NavBar() {
                 alt="Cake Logo"
                 className="w-10 h-10 mr-2"
               />
-              <span className="font-bold text-xl">CakeIT</span>
+              <span className="font-bold text-xl text-black">CakeIT</span>
             </Link>
           </div>
           <div className="hidden md:block">
@@ -41,7 +41,7 @@ export default function NavBar() {
                   <NavLink to="/profile">My Profile</NavLink>
                   <button
                     onClick={handleLogout}
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                    className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
                   >
                     Logout
                   </button>
@@ -52,16 +52,16 @@ export default function NavBar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
 function NavLink({ to, children }) {
   return (
     <Link
       to={to}
-      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+      className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
     >
       {children}
     </Link>
-  );
+  )
 }

@@ -31,7 +31,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen  text-white flex items-center justify-center px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">
@@ -48,7 +48,7 @@ export default function SignUpPage() {
               name="firstName"
               type="text"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -58,7 +58,7 @@ export default function SignUpPage() {
               name="lastName"
               type="text"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -68,7 +68,7 @@ export default function SignUpPage() {
               name="username"
               type="text"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -79,7 +79,7 @@ export default function SignUpPage() {
               type="email"
               autoComplete="email"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -89,7 +89,7 @@ export default function SignUpPage() {
               name="phoneNumber"
               type="tel"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Phone Number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
@@ -100,7 +100,7 @@ export default function SignUpPage() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -111,7 +111,7 @@ export default function SignUpPage() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full px-3 py-2 bg-gray-800 rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-white placeholder-gray-400"
+              className="w-full px-3 py-2  rounded-md border border-gray-700 focus:border-white focus:ring-2 focus:ring-white text-black placeholder-gray-400"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

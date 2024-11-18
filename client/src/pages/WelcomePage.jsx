@@ -1,9 +1,9 @@
-// src/pages/WelcomePage.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSpring, animated, useTransition } from '@react-spring/web';
-import ParticlesBackground from '../components/ParticlesBackground';
+
+import logo from '../assets/logo.png';
+
 
 export default function WelcomePage() {
   const navigate = useNavigate();
@@ -36,12 +36,20 @@ export default function WelcomePage() {
 
   return transition((style, item) =>
     item && (
-      <animated.div style={style} className="min-h-screen text-white relative">
+      <animated.div
+        style={style}
+        className=" text-white relative"
+      >
         {/* Particle Background */}
-        <ParticlesBackground /> 
+        
 
         {/* Welcome Content */}
-        <div className="container mx-auto px-4 py-8 flex flex-col items-center relative z-10 bg-transparent">
+        <div
+          className="container mx-auto px-4 py-8 flex flex-col items-center relative z-10"
+          style={{
+            backgroundColor: 'transparent', // Ensure transparent background
+          }}
+        >
           <div className="text-center space-y-4 mb-8">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Connect with
@@ -51,6 +59,31 @@ export default function WelcomePage() {
             <p className="text-gray-400 max-w-[600px] mx-auto">
               Explore bakeries, view products, and place custom orders.
             </p>
+          </div>
+
+          {/* Image Placeholder */}
+          <div
+            style={{
+              width: '400px',
+              height: '400px',
+              backgroundColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              
+              borderRadius: '8px',
+              marginBottom: '20px', // Add spacing before the buttons
+            }}
+          >
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain', // Ensures the logo fits within the placeholder
+              }}
+            />
           </div>
 
           {/* Action Buttons */}
