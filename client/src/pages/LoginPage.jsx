@@ -9,18 +9,41 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email && password) {
-      setIsAuthenticated(true);
-      navigate('/home');
-    } else {
-      alert('Please enter both email and password.');
+
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log("Login response:", data);
+
+      if (response.ok) {
+        alert("Login successful!");
+        setIsAuthenticated(true);
+        navigate("/home"); // Redirect to home page
+      } else {
+        alert(data.message || "Login failed!");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred during login. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen  text-white flex items-center justify-center px-4">
+    <div className="min-h-screen  text-black flex items-center justify-center px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">
@@ -57,7 +80,7 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-white text-gray-950 rounded-md font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-gray-950"
+            className="w-full py-2 px-4 bg-black text-white rounded-md font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-gray-950"
           >
             Sign In
           </button>
@@ -66,7 +89,7 @@ export default function LoginPage() {
           Don't have an account?{' '}
           <button
             onClick={() => navigate('/signup')}
-            className="font-medium text-white hover:underline"
+            className="font-medium text-black hover:underline"
           >
             Sign Up
           </button>

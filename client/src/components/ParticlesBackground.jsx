@@ -14,8 +14,8 @@ const ParticlesBackground = () => {
               value: 150, // Number of particles
               density: { enable: true, value_area: 800 },
             },
-            color: { value: '#ffffff' }, // White particles
-            shape: { type: 'circle', stroke: { width: 0, color: '#ffffff' } },
+            color: { value: '#000000' }, // White particles
+            shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
             opacity: { value: 0.7, random: true },
             size: { value: 3, random: true },
             line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.4, width: 1 },
@@ -50,7 +50,7 @@ const ParticlesBackground = () => {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'black', // Full-screen black background
+        backgroundColor: 'white', // Full-screen black background
         zIndex: -1,
         pointerEvents: 'none', // Allows interactions through the particles
       }}

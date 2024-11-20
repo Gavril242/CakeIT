@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import logo from "../assets/logo_git.png";
 
 export default function NavBar() {
   const { isAuthenticated, setIsAuthenticated } = useAuth()
@@ -18,8 +19,11 @@ export default function NavBar() {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <img
-                src="https://private-user-images.githubusercontent.com/100515565/381999913-d5de7150-46e2-446b-b9d2-5af983e66480.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE0NDgyNDMsIm5iZiI6MTczMTQ0Nzk0MywicGF0aCI6Ii8xMDA1MTU1NjUvMzgxOTk5OTEzLWQ1ZGU3MTUwLTQ2ZTItNDQ2Yi1iOWQyLTVhZjk4M2U2NjQ4MC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQxMTEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MTExMlQyMTQ1NDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05MzY3YjkxOGJhMzU3ZWMxOTBkMWQ3OGY5ZTNiMGVlMDExY2JlOGMyZWQwZWQ3N2JhYjUzZWE4ZWUxYTJhMzQ5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.pM5dZ01gnM-bY2FA_DPQNqYTc2YI38nrjYvvfFGvJqU"
-                alt="Cake Logo"
+                // src="https://private-user-images.githubusercontent.com/100515565/381999913-d5de7150-46e2-446b-b9d2-5af983e66480.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE0NDgyNDMsIm5iZiI6MTczMTQ0Nzk0MywicGF0aCI6Ii8xMDA1MTU1NjUvMzgxOTk5OTEzLWQ1ZGU3MTUwLTQ2ZTItNDQ2Yi1iOWQyLTVhZjk4M2U2NjQ4MC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQxMTEyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MTExMlQyMTQ1NDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05MzY3YjkxOGJhMzU3ZWMxOTBkMWQ3OGY5ZTNiMGVlMDExY2JlOGMyZWQwZWQ3N2JhYjUzZWE4ZWUxYTJhMzQ5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.pM5dZ01gnM-bY2FA_DPQNqYTc2YI38nrjYvvfFGvJqU"
+                // alt="Cake Logo"
+                // className="w-10 h-10 mr-2"
+                src={logo}
+                alt="Logo"
                 className="w-10 h-10 mr-2"
               />
               <span className="font-bold text-xl text-black">CakeIT</span>
@@ -39,6 +43,7 @@ export default function NavBar() {
                   <NavLink to="/bakery-details">Bakery Details</NavLink>
                   <NavLink to="/cart">Cart</NavLink>
                   <NavLink to="/profile">My Profile</NavLink>
+                  <NavLink to="/add-bakeries">Add Bakery</NavLink>
                   <button
                     onClick={handleLogout}
                     className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"

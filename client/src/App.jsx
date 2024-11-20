@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation, Link } from 'react-router-dom';
 import NavBar from './components/NavBar';
+import AddBakeryPage from "./pages/AddBakeryPage";
 import HomePage from './pages/HomePage';
 import BakeryDetailsPage from './pages/BakeryDetailsPage';
 import CartPage from './pages/CartPage';
@@ -63,6 +64,14 @@ function AnimatedRoutes() {
           </ProtectedRoute>
         }
       />
+        <Route
+            path="/add-bakeries"
+            element={
+                <ProtectedRoute>
+                    <AddBakeryPage/>
+                </ProtectedRoute>
+            }
+        />
       {/* Add a catch-all route for 404 pages */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

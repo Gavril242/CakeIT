@@ -38,8 +38,9 @@ export default function WelcomePage() {
     item && (
       <animated.div
         style={style}
-        className=" text-white relative"
+        className=" text-black relative"
       >
+
         {/* Particle Background */}
         
 
@@ -60,6 +61,11 @@ export default function WelcomePage() {
               Explore bakeries, view products, and place custom orders.
             </p>
           </div>
+          <animated.div
+            style={style}
+            className=" text-white relative"
+          >
+
 
           {/* Image Placeholder */}
           <div
@@ -90,7 +96,7 @@ export default function WelcomePage() {
           <div className="w-full max-w-[600px] space-y-4">
             <animated.button
               style={buttonProps}
-              className="w-full h-14 text-lg font-medium rounded-xl bg-white text-gray-950 hover:bg-gray-200 transition-colors"
+              className="w-full h-14 text-lg font-medium rounded-xl bg-black text-white-950 hover:bg-gray-200 transition-colors"
               onClick={handleGetStarted}
               onMouseEnter={() => setButtonProps.start({ scale: 1.05 })}
               onMouseLeave={() => setButtonProps.start({ scale: 1 })}
@@ -106,15 +112,17 @@ export default function WelcomePage() {
                 Check out more bakeries
               </button>
               <button
-                className="text-sm font-medium hover:text-gray-200 transition-colors"
+                className="text-sm text-black hover:text-gray-200 transition-colors"
                 onClick={() => navigate('/login')}
               >
                 Sign in
               </button>
             </div>
           </div>
+          </animated.div>
         </div>
       </animated.div>
+
     )
   );
 }
