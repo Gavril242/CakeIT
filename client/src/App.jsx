@@ -12,6 +12,8 @@ import CustomerProfilePage from './pages/CustomerProfilePage';
 import CustomOrderPage from './pages/CustomOrderPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ParticlesBackground from './components/ParticlesBackground';
+import ChooseRole from "./pages/ChooseRole";
+import LoginBakeryPage from "./pages/LoginBakeryPage";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -22,6 +24,9 @@ function AnimatedRoutes() {
       <Route path="/" element={<WelcomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/choice" element={<ChooseRole />} />
+        <Route path="/add-bakery" element={<AddBakeryPage />} />
+        <Route path="/login-bakery" element={<LoginBakeryPage />} />
 
       {/* Protected Routes */}
       <Route
@@ -56,6 +61,7 @@ function AnimatedRoutes() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/profile"
         element={
@@ -64,14 +70,7 @@ function AnimatedRoutes() {
           </ProtectedRoute>
         }
       />
-        <Route
-            path="/add-bakeries"
-            element={
-                <ProtectedRoute>
-                    <AddBakeryPage/>
-                </ProtectedRoute>
-            }
-        />
+
       {/* Add a catch-all route for 404 pages */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

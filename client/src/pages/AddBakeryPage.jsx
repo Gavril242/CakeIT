@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 
 export default function AddBakeryPage() {
     const [formData, setFormData] = useState({
-        id: '',
         name: '',
+        email: '',
+        password: '',
         location: '',
         description: '',
         rating: '',
-        products: [],
-        image: null, // New field for the image file
+        image: null, // Field for the image file
     });
-
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -35,7 +36,7 @@ export default function AddBakeryPage() {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/bakeries', {
+            const response = await fetch('http://localhost:5001/api/bakery_auth/register_bakery', {
                 method: 'POST',
                 body: formDataToSend,
             });
@@ -58,24 +59,36 @@ export default function AddBakeryPage() {
             <h1 className="text-2xl font-bold mb-6">Add a New Bakery</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="id" className="block text-sm font-medium">ID:</label>
-                    <input
-                        type="number"
-                        id="id"
-                        name="id"
-                        value={formData.id}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                        required
-                    />
-                </div>
-                <div>
                     <label htmlFor="name" className="block text-sm font-medium">Name:</label>
                     <input
                         type="text"
                         id="name"
                         name="name"
                         value={formData.name}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email" className="block text-sm font-medium">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password" className="block text-sm font-medium">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
                         onChange={handleChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                         required
@@ -130,6 +143,12 @@ export default function AddBakeryPage() {
                     className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
                 >
                     Add Bakery
+                </button>
+                <button
+                    className="text-sm text-black hover:text-gray-200 transition-colors"
+                    onClick={() => navigate('/login-bakery')}
+                >
+                    Sign in
                 </button>
             </form>
         </div>

@@ -21,7 +21,7 @@ export default function WelcomePage() {
     config: { duration: 300 },
     onRest: () => {
       if (isLeaving) {
-        navigate('/signup');
+        navigate('/choice');
       }
     },
   });

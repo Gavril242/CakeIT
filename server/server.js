@@ -6,7 +6,10 @@ const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/auth');
 const bakeryRoutes = require('./routes/bakeries');
+
+const bakeryauthRoutes = require('./routes/bakery_auth');
 const productRoutes = require('./routes/products');
+
 
 dotenv.config();
 
@@ -16,6 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // Adjust origin for production
 app.use(cookieParser());
+
 
 // Rate Limiter
 const limiter = rateLimit({
@@ -29,6 +33,8 @@ app.use('/api/auth', authRoutes);
 // Routes
 app.use('/api/bakeries', bakeryRoutes);
 app.use('/api/products', productRoutes);
+
+app.use('/api/bakery_auth', bakeryauthRoutes);
 const path = require('path');
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
