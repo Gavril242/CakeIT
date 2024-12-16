@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUserRole } = useAuth();
+  const { setIsAuthenticated, setUserRole, setUserId } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,6 +40,7 @@ export default function LoginPage() {
         const userData = JSON.parse(atob(token.split('.')[1]));
         setUserRole(userData.role);
         setIsAuthenticated(true);
+        setUserId(userData.id);
 
         // Show success popup
         setShowSuccessPopup(true);

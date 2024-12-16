@@ -1,4 +1,3 @@
-// src/context/CartContext.js
 import React, { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
@@ -7,6 +6,12 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
     const addToCart = (product, bakeryId, bakeryName) => {
+        if (!product.id) {
+            console.error("Error: Product is missing an 'id' field.", product);
+            alert("Unable to add product to the cart. Please contact support.");
+            return;
+        }
+
         setCart((prevCart) => {
             const existingBakery = prevCart.find((item) => item.bakeryId === bakeryId);
 
@@ -20,7 +25,7 @@ export const CartProvider = ({ children }) => {
                                 ...item,
                                 products: item.products.map((prod) =>
                                     prod.id === product.id
-                                        ? { ...prod, quantity: prod.quantity + 1 }
+                                        ? { ...prod, quantity: prod.quantity + (product.quantity || 1) }
                                         : prod
                                 ),
                             }
@@ -29,7 +34,7 @@ export const CartProvider = ({ children }) => {
                 } else {
                     return prevCart.map((item) =>
                         item.bakeryId === bakeryId
-                            ? { ...item, products: [...item.products, { ...product, quantity: 1 }] }
+                            ? { ...item, products: [...item.products, { ...product }] }
                             : item
                     );
                 }
@@ -39,7 +44,7 @@ export const CartProvider = ({ children }) => {
                     {
                         bakeryId,
                         bakeryName,
-                        products: [{ ...product, quantity: 1 }],
+                        products: [{ ...product }],
                     },
                 ];
             }

@@ -47,8 +47,16 @@ function BakeryDetailsPage() {
   }, [bakeryId]);
 
   // Add product to cart
+  // Changes are minimal
   const handleAddToCart = (product) => {
-    addToCart(product, bakeryId, bakery.name);
+    const cartProduct = {
+      id: product._id, // Ensure `_id` is mapped to `id`
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+    };
+
+    addToCart(cartProduct, bakeryId, bakery.name);
     alert(`${product.name} added to cart.`);
   };
 
