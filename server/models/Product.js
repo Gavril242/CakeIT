@@ -1,17 +1,43 @@
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
-  bakeryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Bakery', required: true },
-  name: { type: String, required: true },
-  description: String,
-  price: Number,
-  customOptions: {
-    size: [String],      // e.g., ['small', 'medium', 'large']
-    flavors: [String],   // e.g., ['vanilla', 'chocolate']
-    decorations: [String] // e.g., ['text', 'image', 'custom']
+  bakeryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bakery',
+    required: true,
   },
-  availability: { type: Boolean, default: true }
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  ingredients: {
+    type: String,
+    trim: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  weight: {
+    type: Number,
+    required: true,
+    min: 0, // Weight in grams
+  },
+  stock: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  image: {
+    type: String, // File path or URL to the image
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

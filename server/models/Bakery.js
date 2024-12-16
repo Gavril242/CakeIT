@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const BakerySchema = new mongoose.Schema({
-  id: { type: Number, required: true }, // Correct type is Number
   name: { type: String, required: true },
   location: { type: String },
   description: { type: String },
