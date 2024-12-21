@@ -60,7 +60,7 @@ export default function AddProductPage() {
                 setShowConfirmation(true);
                 setTimeout(() => {
                     setShowConfirmation(false);
-                    navigate('/products'); // Redirect to product list
+                    navigate('/home-bakery'); // Redirect to product list
                 }, 2000);
             } else {
                 const errorData = await response.json();

@@ -14,7 +14,7 @@ const OrderSchema = new mongoose.Schema({
   products: [
     {
       productId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Mixed,
         ref: 'Product',
         required: true,
       },
@@ -34,7 +34,7 @@ const OrderSchema = new mongoose.Schema({
   ],
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'declined', 'completed'],
+    enum: ['pending', 'accepted', 'declined','waiting for delivery','waiting for pickup', 'completed'],
     default: 'pending',
   },
   totalPrice: {
@@ -61,6 +61,18 @@ const OrderSchema = new mongoose.Schema({
     required: function () {
       return this.pickupOption === 'delivery';
     }, // Only required if pickupOption is 'delivery'
+  },
+  deliveryDate: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: function (value) {
+        const day = value.getDay(); // 0 = Sunday, 6 = Saturday
+        const hour = value.getHours();
+        return day >= 1 && day <= 5 && hour >= 10 && hour <= 17; // Monday to Friday, 10 AM to 5 PM
+      },
+      message: 'Delivery date must be Monday to Friday between 10 AM and 5 PM.',
+    },
   },
   notes: {
     type: String,

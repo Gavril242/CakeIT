@@ -96,122 +96,131 @@ function HomeBakeryPage() {
     }
 
     return (
-        <div className="min-h-screen bg-white text-black p-8">
-            {/* Bakery Image */}
+        <div className="min-h-screen bg-white text-black">
+            {/* Bakery Banner */}
             {bakery.imageUrl && (
-                <div className="flex justify-center mb-6">
-                    <img
-                        src={`${bakery.imageUrl}`}
-                        alt={`${bakery.name} Profile`}
-                        className="h-48 w-48 object-cover rounded-full shadow-lg"
-                    />
+                <div
+                    className="relative h-96 bg-cover bg-center mb-8"
+                    style={{ backgroundImage: `url(${bakery.imageUrl})` }}
+                >
+                    <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
+                        <h1 className="text-5xl font-bold mb-4">{bakery.name}</h1>
+                        <p className="text-lg">{bakery.location}</p>
+                    </div>
                 </div>
             )}
+
             {/* Bakery Details */}
-            {editMode ? (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium">Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={updatedData.name}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
+            <div className="max-w-4xl mx-auto p-8 bg-gray-100 rounded-lg shadow-lg">
+                {editMode ? (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium">Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={updatedData.name}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Location</label>
+                            <input
+                                type="text"
+                                name="location"
+                                value={updatedData.location}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Description</label>
+                            <textarea
+                                name="description"
+                                value={updatedData.description}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={updatedData.email}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Rating</label>
+                            <input
+                                type="number"
+                                name="rating"
+                                value={updatedData.rating}
+                                onChange={handleInputChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Profile Picture</label>
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                className="w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div className="flex gap-4">
+                            <button
+                                type="submit"
+                                className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
+                            >
+                                Save Changes
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setEditMode(false)}
+                                className="bg-gray-200 text-black border border-gray-400 py-2 px-4 rounded hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <div className="space-y-4 text-center">
+                        <p className="text-lg">
+                            <strong className="block text-sm font-medium">Description:</strong>
+                            {bakery.description}
+                        </p>
+                        <p className="text-lg">
+                            <strong className="block text-sm font-medium">Email:</strong>
+                            {bakery.email}
+                        </p>
+                        <p className="text-lg">
+                            <strong className="block text-sm font-medium">Rating:</strong>
+                            {bakery.rating || 'No rating available'}
+                        </p>
+                        <button
+                            onClick={() => setEditMode(true)}
+                            className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
+                        >
+                            Edit Profile
+                        </button>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium">Location</label>
-                        <input
-                            type="text"
-                            name="location"
-                            value={updatedData.location}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Description</label>
-                        <textarea
-                            name="description"
-                            value={updatedData.description}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={updatedData.email}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Rating</label>
-                        <input
-                            type="number"
-                            name="rating"
-                            value={updatedData.rating}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Profile Picture</label>
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            className="w-full border border-gray-300 rounded-md p-2"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                        Save Changes
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setEditMode(false)}
-                        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 ml-4"
-                    >
-                        Cancel
-                    </button>
-                </form>
-            ) : (
-                <div>
-                    <h1 className="text-3xl font-bold mb-6">{bakery.name}</h1>
-                    <p>
-                        <strong>Location:</strong> {bakery.location}
-                    </p>
-                    <p>
-                        <strong>Description:</strong> {bakery.description}
-                    </p>
-                    <p>
-                        <strong>Email:</strong> {bakery.email}
-                    </p>
-                    <p>
-                        <strong>Rating:</strong> {bakery.rating || 'No rating available'}
-                    </p>
-                    <button
-                        onClick={() => setEditMode(true)}
-                        className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 mt-4"
-                    >
-                        Edit Profile
-                    </button>
-                </div>
-            )}
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                )}
+            </div>
+
+            {/* Products Section */}
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-center">Products</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-8">
                 {bakery.products.map((product) => (
-                    <div key={product._id} className="bg-gray-100 p-4 rounded shadow-md">
+                    <div key={product._id} className="bg-white p-4 rounded shadow-md">
                         <img
                             src={product.image || '/fallback-image.jpg'}
                             alt={product.name}
-                            className="h-32 w-full object-cover rounded mb-4"
+                            className="h-48 w-full object-cover rounded mb-4"
                         />
                         <h3 className="font-bold text-lg">{product.name}</h3>
                         <p className="text-gray-700">{product.description}</p>

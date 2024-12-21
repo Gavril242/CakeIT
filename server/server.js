@@ -15,7 +15,7 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const easyboxRoutes = require('./routes/easyboxRoutes');
 const clientRoutes = require('./routes/clientRoutes');
-
+const qrRoutes = require('./routes/QRRoutes');
 dotenv.config();
 
 
@@ -43,6 +43,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/easybox', easyboxRoutes);
 app.use('/api/clients', clientRoutes);
+app.use('/api/qr', qrRoutes);
 
 // MongoDB connection
 const uri = process.env.MONGO_URI || MONGO_URI;

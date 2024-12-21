@@ -98,6 +98,32 @@ const getProductsByBakery = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 };
+const getStock = async (req, res) => {
+    try {
+        const { products } = req.body; // [{ productId, quantity }]
+        const productIds = products.map(p => p.productId);
+
+        // Fetch the product stock
+        const stockData = await Product.find({ _id: { $in: productIds } });
+
+        const insufficientStock = stockData.filter(product => {
+            const requiredQuantity = products.find(p => p.productId === product._id.toString()).quantity;
+            return product.stock < requiredQuantity; // Check stock availability
+        });
+
+        if (insufficientStock.length > 0) {
+            return res.status(400).json({
+                message: 'Insufficient stock for some products.',
+                products: insufficientStock.map(p => ({ name: p.name, stock: p.stock })),
+            });
+        }
+
+        res.json({ message: 'All products are in stock.' });
+    } catch (error) {
+        console.error('Error checking stock:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Update product
 const updateProduct = async (req, res) => {
@@ -139,4 +165,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     updateStock,
+    getStock
 };

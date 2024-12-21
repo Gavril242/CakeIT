@@ -7,6 +7,7 @@ const {
     updateProduct,
     deleteProduct,
     updateStock,
+    getStock
 } = require('../controllers/productController');
 const { authenticateToken, authorizeRole } = require('../middleware/authMiddleware');
 
@@ -24,5 +25,6 @@ router.get('/bakery', authenticateToken, authorizeRole('bakery'), getProductsByB
 router.patch('/:id/stock', authenticateToken, authorizeRole('bakery'), updateStock);
 router.put('/:id', authenticateToken, authorizeRole('bakery'), updateProduct);
 router.delete('/:id', authenticateToken, authorizeRole('bakery'), deleteProduct);
+router.post('/check-stock',  authenticateToken, authorizeRole('client'), getStock);
 
 module.exports = router;

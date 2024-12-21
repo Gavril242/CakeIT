@@ -51,7 +51,7 @@ export default function ChooseRole() {
                             <animated.button
                                 style={buttonProps}
                                 className="w-full h-14 rounded-xl bg-black text-white hover:bg-gray-200"
-                                onClick={() => handleRoleSelect('/add-bakery')}
+                                onClick={() => handleRoleSelect('/login-bakery')}
                                 onMouseEnter={() => buttonProps.scale.set(1.05)}
                                 onMouseLeave={() => buttonProps.scale.set(1)}
                             >
@@ -60,7 +60,7 @@ export default function ChooseRole() {
                             <animated.button
                                 style={buttonProps}
                                 className="w-full h-14 rounded-xl bg-black text-white hover:bg-gray-200"
-                                onClick={() => handleRoleSelect('/signup')}
+                                onClick={() => handleRoleSelect('/login')}
                                 onMouseEnter={() => buttonProps.scale.set(1.05)}
                                 onMouseLeave={() => buttonProps.scale.set(1)}
                             >

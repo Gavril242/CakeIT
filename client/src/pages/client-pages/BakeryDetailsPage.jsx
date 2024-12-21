@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSpring, animated } from '@react-spring/web';
-import {useCart} from "../../context/CartContext";
+import { useCart } from '../../context/CartContext';
 
 function BakeryDetailsPage() {
   const { bakeryId } = useParams();
@@ -9,10 +9,10 @@ function BakeryDetailsPage() {
   const [bakery, setBakery] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cart, setCart] = useState([]);
   const { addToCart } = useCart();
-  const [selectedProduct, setSelectedProduct] = useState(null); // For modal
-  const [showModal, setShowModal] = useState(false); // Modal state
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [notification, setNotification] = useState(null); // Notification state
 
   // Spring animations
   const fadeIn = useSpring({
@@ -26,7 +26,7 @@ function BakeryDetailsPage() {
     config: { tension: 300, friction: 10 },
   });
 
-  // Fetch bakery details from the backend
+  // Fetch bakery details
   useEffect(() => {
     const fetchBakery = async () => {
       try {
@@ -47,21 +47,27 @@ function BakeryDetailsPage() {
   }, [bakeryId]);
 
   // Add product to cart
-  // Changes are minimal
   const handleAddToCart = (product) => {
     const cartProduct = {
-      id: product._id, // Ensure `_id` is mapped to `id`
+      id: product._id,
       name: product.name,
       price: product.price,
       quantity: 1,
     };
 
     addToCart(cartProduct, bakeryId, bakery.name);
-    alert(`${product.name} added to cart.`);
+    showNotification(`${product.name} added to cart.`);
   };
 
+  // Show notification
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
 
-  // Show product details in a modal
+  // Show product details in modal
   const handleShowDetails = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
@@ -72,15 +78,17 @@ function BakeryDetailsPage() {
     setSelectedProduct(null);
     setShowModal(false);
   };
-  function truncateText(text, maxLength) {
+
+  // Truncate text
+  const truncateText = (text, maxLength) => {
     if (!text) return '';
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  }
+  };
 
-  // Render stars for the rating
+  // Render stars
   const renderStars = (rating) => {
     const stars = [];
-    const fullStars = Math.floor(rating || 0); // Default to 0 if rating is undefined
+    const fullStars = Math.floor(rating || 0);
     const halfStar = rating % 1 !== 0;
     const totalStars = 5;
 
@@ -99,7 +107,7 @@ function BakeryDetailsPage() {
   if (isLoading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
-          <div className="loader"></div> {/* Replace with your loader component or animation */}
+          <div className="loader"></div>
         </div>
     );
   }
@@ -114,6 +122,13 @@ function BakeryDetailsPage() {
 
   return (
       <div className="bg-gray-100 min-h-screen">
+        {/* Notification */}
+        {notification && (
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-md shadow-lg z-50">
+              {notification}
+            </div>
+        )}
+
         {/* Full-width Background Image */}
         <div
             className="relative w-full h-64 bg-cover bg-center"
@@ -155,7 +170,7 @@ function BakeryDetailsPage() {
                       <div className="p-4 flex flex-col justify-between flex-grow">
                         <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
                         <p className="text-gray-700 mt-2">
-                          {truncateText(product.description, 100)} {/* Truncate description */}
+                          {truncateText(product.description, 100)}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
                           <span className="text-lg font-bold text-gray-900">RON {product.price}</span>
@@ -182,11 +197,14 @@ function BakeryDetailsPage() {
             )}
           </div>
 
-          {/* Custom Order Button */}
           <div className="flex justify-center mt-8">
             <animated.button
                 style={buttonProps}
-                onClick={() => navigate('/custom-order')}
+                onClick={() =>
+                    navigate(`/custom-order/${bakeryId}`, {
+                      state: { bakeryId: bakery._id, bakeryName: bakery.name },
+                    })
+                }
                 className="bg-gray-800 text-white py-3 px-6 rounded-full text-lg font-semibold hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
             >
               Place a Custom Order

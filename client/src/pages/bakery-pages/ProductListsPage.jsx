@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 function ProductListsPage() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showStockModal, setShowStockModal] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [newStock, setNewStock] = useState("");
 
     useEffect(() => {
         fetchProducts();
@@ -30,20 +32,20 @@ function ProductListsPage() {
         }
     };
 
-    const handleUpdateStock = async (productId, stock) => {
+    const handleUpdateStock = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/api/products/${productId}/stock`, {
+            const response = await fetch(`http://localhost:5001/api/products/${selectedProductId}/stock`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ stock }),
+                body: JSON.stringify({ stock: newStock }),
             });
 
             if (response.ok) {
-                alert('Stock updated successfully.');
                 fetchProducts();
+                setShowStockModal(false);
             } else {
                 console.error('Failed to update stock.');
             }
@@ -62,21 +64,24 @@ function ProductListsPage() {
             });
 
             if (response.ok) {
-                alert('Product deleted successfully.');
                 fetchProducts();
+                setShowDeleteModal(false);
             } else {
                 console.error('Failed to delete product.');
             }
         } catch (err) {
             console.error('Error deleting product:', err);
-        } finally {
-            setShowModal(false); // Close the modal
         }
     };
 
     const confirmDelete = (productId) => {
         setSelectedProductId(productId);
-        setShowModal(true); // Show the confirmation modal
+        setShowDeleteModal(true);
+    };
+
+    const confirmUpdateStock = (productId) => {
+        setSelectedProductId(productId);
+        setShowStockModal(true);
     };
 
     if (loading) {
@@ -99,16 +104,13 @@ function ProductListsPage() {
                         <p className="text-sm text-gray-600 mb-2">Ingredients: {product.ingredients}</p>
                         <p className="text-sm text-gray-600 mb-2">Price: RON {product.price}</p>
                         <p className="text-sm text-gray-600 mb-2">Weight: {product.weight}g</p>
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm font-medium">Stock: {product.stock}</span>
-                            <input
-                                type="number"
-                                min="0"
-                                placeholder="Update stock"
-                                className="w-16 px-2 py-1 border border-gray-300 rounded"
-                                onChange={(e) => handleUpdateStock(product._id, e.target.value)}
-                            />
-                        </div>
+                        <p className="text-sm text-gray-600 mb-4">Stock: {product.stock}</p>
+                        <button
+                            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 mb-2"
+                            onClick={() => confirmUpdateStock(product._id)}
+                        >
+                            Update Stock
+                        </button>
                         <button
                             className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
                             onClick={() => confirmDelete(product._id)}
@@ -119,8 +121,39 @@ function ProductListsPage() {
                 ))}
             </div>
 
-            {/* Confirmation Modal */}
-            {showModal && (
+            {/* Update Stock Modal */}
+            {showStockModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+                        <h2 className="text-lg font-bold mb-4">Update Stock</h2>
+                        <input
+                            type="number"
+                            min="0"
+                            placeholder="Enter new stock"
+                            value={newStock}
+                            onChange={(e) => setNewStock(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                        />
+                        <div className="flex justify-between">
+                            <button
+                                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                                onClick={() => setShowStockModal(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                                onClick={handleUpdateStock}
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
                         <h2 className="text-lg font-bold mb-4">Are you sure?</h2>
@@ -129,8 +162,8 @@ function ProductListsPage() {
                         </p>
                         <div className="flex justify-between">
                             <button
-                                className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-                                onClick={() => setShowModal(false)}
+                                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                                onClick={() => setShowDeleteModal(false)}
                             >
                                 Cancel
                             </button>

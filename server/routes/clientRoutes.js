@@ -12,7 +12,7 @@ const router = express.Router();
 // Client routes
 router.get('/', authenticateToken, authorizeRole('admin'), getAllClients);
 router.get('/:id', authenticateToken, authorizeRole('client'), getClientById);
-router.put('/:id', authenticateToken, authorizeRole('client'), updateClient);
+router.patch('/:id', authenticateToken, authorizeRole('client'), updateClient);
 router.delete('/:id', authenticateToken, authorizeRole('admin'), deleteClient);
 
 module.exports = router;

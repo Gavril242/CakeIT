@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
@@ -6,14 +6,25 @@ function CartPage() {
   const navigate = useNavigate();
   const { cart, removeFromCart, clearCart } = useCart();
 
-  const [pickupOption, setPickupOption] = useState('in-store'); // Default pickup option
+  const [pickupOption, setPickupOption] = useState('in-store');
   const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [deliveryDate, setDeliveryDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [hasCustomOrder, setHasCustomOrder] = useState(false);
+
+  useEffect(() => {
+    const containsCustomOrder = cart.some((bakery) =>
+        bakery.products.some((product) => product.id === 'custom')
+    );
+    setHasCustomOrder(containsCustomOrder);
+  }, [cart]);
 
   const getTransportCost = () => {
     if (pickupOption === 'delivery') return 15.0;
     if (pickupOption === 'easybox') return 10.0;
-    return 0.0; // In-store
+    return 0.0;
   };
 
   const calculateTotals = () => {
@@ -21,8 +32,7 @@ function CartPage() {
     const transportCost = getTransportCost();
     const bakeryTotals = cart.map((bakery) => {
       const productsTotal = bakery.products.reduce(
-          (sum, product) =>
-              sum + (product.price || 0) * (product.quantity || 1),
+          (sum, product) => sum + (product.price || 0) * (product.quantity || 1),
           0
       );
       const bakeryTotal = productsTotal + transportCost;
@@ -39,54 +49,120 @@ function CartPage() {
 
   const { bakeryTotals, overallTotal } = calculateTotals();
 
+  const validateDeliveryDate = (dateString) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(dateString);
+
+    const day = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+    const hour = selectedDate.getHours();
+
+    return (
+        selectedDate > currentDate &&
+        day >= 1 &&
+        day <= 5 &&
+        hour >= 10 &&
+        hour <= 17
+    );
+  };
+
   const handleCheckout = async () => {
+    if (hasCustomOrder && cart.length > 1) {
+      setModalMessage(
+          'Your cart contains a custom order. You can only checkout with the custom order for a single bakery.'
+      );
+      setShowModal(true);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Please log in to proceed with the checkout.');
-        return;
-      }
-
-      if (pickupOption === 'delivery' && !deliveryAddress.trim()) {
-        alert('Please provide a delivery address.');
+        setModalMessage('Please log in to proceed with the checkout.');
+        setShowModal(true);
         return;
       }
 
       if (!cart.length) {
-        alert('Your cart is empty.');
+        setModalMessage('Your cart is empty.');
+        setShowModal(true);
         return;
       }
 
-      // Validate cart structure
-      if (!cart.every((bakery) => bakery.products.every((product) => product.id))) {
-        alert('Some products are missing an ID. Please contact support.');
-        console.error('Cart validation failed:', cart);
+      if (!validateDeliveryDate(deliveryDate)) {
+        setModalMessage(
+            'Please select a valid delivery date. Delivery must be in the future, Monday to Friday, between 10 AM and 5 PM.'
+        );
+        setShowModal(true);
         return;
       }
 
-      // Create a separate order for each bakery
+      if (pickupOption === 'delivery' && !deliveryAddress.trim()) {
+        setModalMessage('Please provide a delivery address.');
+        setShowModal(true);
+        return;
+      }
+
+      // Check if delivery date is the current time
+      const selectedDate = new Date(deliveryDate);
+      const currentDate = new Date();
+
+      if (
+          selectedDate.toISOString().slice(0, 16) ===
+          currentDate.toISOString().slice(0, 16)
+      ) {
+        // Validate stock
+        const productsToCheck = cart.flatMap((bakery) =>
+            bakery.products.map((product) => ({
+              productId: product.id,
+              quantity: product.quantity || 1,
+            }))
+        );
+
+        const stockResponse = await fetch('http://localhost:5001/api/products/check-stock', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ products: productsToCheck }),
+        });
+
+        if (!stockResponse.ok) {
+          const stockData = await stockResponse.json();
+          setModalMessage(
+              `Some products have insufficient stock: ${stockData.products
+                  .map((p) => `${p.name} (available: ${p.stock})`)
+                  .join(', ')}`
+          );
+          setShowModal(true);
+          return;
+        }
+      }
+
+      // Place orders
       const orders = cart.map((bakery) => ({
         bakeryId: bakery.bakeryId,
         products: bakery.products.map((product) => ({
-          productId: product.id, // Map `id` to `productId`
+          productId: product.id === 'custom' ? 'custom' : product.id,
           name: product.name,
           price: product.price,
-          quantity: product.quantity,
+          quantity: product.quantity || 1,
         })),
         transportCost: getTransportCost(),
         totalPrice:
             bakery.products.reduce(
-                (sum, product) => sum + product.price * product.quantity,
+                (sum, product) => sum + (product.price || 0) * (product.quantity || 1),
                 0
             ) + getTransportCost(),
         pickupOption,
         deliveryAddress: pickupOption === 'delivery' ? deliveryAddress : null,
-        notes,
+        deliveryDate,
+        notes: bakery.products
+            .filter((product) => product.id === 'custom')
+            .map((product) => product.notes || '')
+            .join(', ') || notes, // Default to global notes for normal orders
       }));
 
-      console.log('Orders being sent:', orders); // Debugging log
-
-      // Send each order as a separate request
       const responses = await Promise.all(
           orders.map((order) =>
               fetch('http://localhost:5001/api/orders', {
@@ -100,47 +176,40 @@ function CartPage() {
           )
       );
 
-      // Check if all orders were created successfully
       const failedOrders = responses.filter((response) => !response.ok);
       if (failedOrders.length > 0) {
-        alert('Some orders failed to be placed. Please try again.');
-        console.error('Failed orders:', failedOrders);
+        setModalMessage('Some orders failed to be placed. Please try again.');
+        setShowModal(true);
         return;
       }
 
       clearCart();
-      alert('Orders placed successfully!');
-      navigate('/home'); // Redirect to a success page
+      setModalMessage('Orders placed successfully!');
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+        navigate('/home');
+      }, 2000);
     } catch (error) {
-      console.error('Checkout error:', error);
-      alert('An error occurred while placing your orders. Please try again.');
+      setModalMessage('An error occurred while placing your orders. Please try again.');
+      setShowModal(true);
     }
   };
-
   return (
       <div className="min-h-screen bg-white text-black p-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 flex items-center">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 mr-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-            >
-              <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            Your Cart
-          </h1>
+          <h1 className="text-4xl font-bold mb-8 flex items-center">Your Cart</h1>
+
+          {hasCustomOrder && (
+              <p className="text-red-600 mb-4">
+                Note: Your cart contains a custom order. The price will be proposed by the bakery after analysis. If you are
+                not satisfied with the proposed price, you can cancel the order.
+              </p>
+          )}
 
           {bakeryTotals.length > 0 ? (
               bakeryTotals.map((bakery) => (
-                  <div key={bakery.bakeryId} className="mb-8 bg-gray-100 rounded-lg overflow-hidden shadow-lg">
+                  <div key={bakery.bakeryId} className="mb-8 bg-gray-100 rounded-lg shadow-lg">
                     <div className="p-6">
                       <h2 className="text-2xl font-semibold mb-4">{bakery.bakeryName}</h2>
                       <div className="space-y-4">
@@ -149,13 +218,14 @@ function CartPage() {
                               <div>
                                 <h3 className="font-medium">{product.name}</h3>
                                 <p className="text-sm text-gray-600">
-                                  Quantity: {product.quantity || 1}
+                                  {product.id === 'custom' ? (
+                                      'Price: 0 (To be proposed by bakery)'
+                                  ) : (
+                                      `Quantity: ${product.quantity || 1}`
+                                  )}
                                 </p>
                               </div>
                               <div className="flex items-center gap-4">
-                                <p className="font-semibold">
-                                  RON {((product.price || 0) * (product.quantity || 1)).toFixed(2)}
-                                </p>
                                 <button
                                     className="text-red-500 hover:text-red-400"
                                     onClick={() => removeFromCart(product.id, bakery.bakeryId)}
@@ -185,7 +255,7 @@ function CartPage() {
           )}
 
           {bakeryTotals.length > 0 && (
-              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg">
+              <div className="bg-gray-100 rounded-lg shadow-lg">
                 <div className="p-6">
                   <div className="flex flex-col gap-4">
                     <div>
@@ -199,6 +269,16 @@ function CartPage() {
                         <option value="easybox">Easybox</option>
                         <option value="delivery">Delivery</option>
                       </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Delivery Date & Time</label>
+                      <input
+                          type="datetime-local"
+                          value={deliveryDate}
+                          onChange={(e) => setDeliveryDate(e.target.value)}
+                          className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                      />
                     </div>
 
                     {pickupOption === 'delivery' && (
@@ -247,6 +327,21 @@ function CartPage() {
               </div>
           )}
         </div>
+
+        {/* Modal for messages */}
+        {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+                <p className="text-lg font-semibold mb-4">{modalMessage}</p>
+                <button
+                    className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                    onClick={() => setShowModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+        )}
       </div>
   );
 }

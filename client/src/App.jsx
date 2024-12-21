@@ -19,6 +19,8 @@ import AddProductPage from "./pages/bakery-pages/AddProductPage";
 import OrderListPage from "./pages/bakery-pages/OrderListPage";
 import ProductListsPage from "./pages/bakery-pages/ProductListsPage";
 import {CartProvider} from "./context/CartContext";
+import ViewOrderDetailsClient from "./pages/client-pages/ViewOrderDetailsClient";
+import ViewOrderDetailsBakery from "./pages/bakery-pages/ViewOrderDetailsBakeryPage";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -75,7 +77,7 @@ function AnimatedRoutes() {
         }
       />
       <Route
-        path="/custom-order"
+        path="/custom-order/:bakeryId"
         element={
           <ProtectedRoute>
             <CustomOrderPage />
@@ -90,7 +92,16 @@ function AnimatedRoutes() {
             <CustomerProfilePage />
           </ProtectedRoute>
         }
+        />
+      <Route
+          path="/bakery/order/:orderId"
+          element={
+              <ProtectedRoute>
+                  <ViewOrderDetailsBakery/>
+              </ProtectedRoute>
+          }
       />
+        <Route path="/order/:orderId" element={<ProtectedRoute><ViewOrderDetailsClient /></ProtectedRoute>} />
         <Route
             path="/orders-bakery"
             element={
