@@ -221,7 +221,7 @@ function ViewOrderDetailsBakery() {
                         Mark as Waiting for Delivery
                     </button>
 
-                    {(qrCode || (isStatus('waiting for delivery') && order.pickupOption === 'easybox')) && (
+                    {(qrCode && (isStatus('waiting for delivery') && order.pickupOption === 'easybox')) && (
                         <button
                             className={`py-2 px-4 rounded ${
                                 qrCode ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'bg-black text-white hover:bg-gray-800'
