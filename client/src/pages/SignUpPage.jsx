@@ -61,7 +61,7 @@ export default function SignUpPage() {
     };
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch('http://192.168.1.96:5001/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

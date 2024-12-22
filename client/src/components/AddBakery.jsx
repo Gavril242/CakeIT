@@ -23,7 +23,7 @@ export default function AddBakery() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5001/api/addbakeries', {
+            const response = await fetch('http://192.168.1.96:5001/api/addbakeries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ function ViewOrderDetailsBakery() {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5001/api/orders/${orderId}`, {
+                const response = await fetch(`http://192.168.1.96:5001/api/orders/${orderId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -37,7 +37,7 @@ function ViewOrderDetailsBakery() {
 
         const fetchQRCode = async () => {
             try {
-                const response = await fetch(`http://localhost:5001/api/qr/qr/${orderId}`, {
+                const response = await fetch(`http://192.168.1.96:5001/api/qr/qr/${orderId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -58,7 +58,7 @@ function ViewOrderDetailsBakery() {
 
     const handleChangeStatus = async (newStatus) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/orders/${orderId}/status`, {
+            const response = await fetch(`http://192.168.1.96:5001/api/orders/${orderId}/status`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -80,7 +80,7 @@ function ViewOrderDetailsBakery() {
 
     const handleGenerateQRCode = async () => {
         try {
-            const response = await fetch('http://localhost:5001/api/qr/generate-qr', {
+            const response = await fetch('http://192.168.1.96:5001/api/qr/generate-qr', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ function ViewOrderDetailsBakery() {
                         Mark as Waiting for Delivery
                     </button>
 
-                    {(qrCode && (isStatus('waiting for delivery') && order.pickupOption === 'easybox')) && (
+                    {((isStatus('waiting for delivery') && order.pickupOption === 'easybox')) && (
                         <button
                             className={`py-2 px-4 rounded ${
                                 qrCode ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'bg-black text-white hover:bg-gray-800'
@@ -232,7 +232,7 @@ function ViewOrderDetailsBakery() {
                                     : showConfirmation('Show a QR Code for locker?', handleGenerateQRCode);
                             }}
                         >
-                            {qrCode ? 'Open Locker' : 'Show QR Code'}
+                            {'Show QR Code'}
                         </button>
                     )}
 

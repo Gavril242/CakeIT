@@ -1,6 +1,42 @@
 const EasyboxReservation = require('../models/EasyboxReservation');
 const Order = require('../models/Order');
 // Update Easybox reservation and order status
+const updateEasyboxbox = async (req, res) => {
+    const { orderId, state, orderStatus } = req.body;
+
+    try {
+        // Update Easybox reservation status
+        const reservation = await EasyboxReservation.findOneAndUpdate(
+            { orderId },
+            { state },
+            { new: true }
+        );
+
+        if (!reservation) {
+            return res.status(404).json({ message: 'Reservation not found' });
+        }
+
+        // Update Order status
+        const order = await Order.findByIdAndUpdate(
+            orderId,
+            { status: orderStatus },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json({
+            message: 'Reservation and order status updated successfully',
+            reservation,
+            order,
+        });
+    } catch (error) {
+        console.error('Error updating Easybox:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 const updateEasybox = async (req, res) => {
     const { orderId, state, orderStatus } = req.body;
 
@@ -78,5 +114,23 @@ const checkEasybox = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+const checkEasyboxStatus = async (req, res) => {
+    try {
+        // Check if there is any reservation with state other than 'completed'
+        const reservations = await EasyboxReservation.find({
+            state: { $ne: 'completed' },
+        });
 
-module.exports = {updateEasybox, reserveEasybox, checkEasybox };
+        if (!reservations.length) {
+            return res.json({ hasOrders: false, message: 'Easybox is empty' });
+        }
+
+        const isFull = reservations.every(res => res.state === 'waiting for pickup');
+        return res.json({ hasOrders: true, isFull, message: isFull ? 'Easybox is full' : 'Easybox has space' });
+    } catch (error) {
+        console.error('Error checking Easybox status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = {updateEasybox, reserveEasybox, checkEasybox, checkEasyboxStatus, updateEasyboxbox };

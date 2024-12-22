@@ -14,7 +14,7 @@ function HomePage() {
     useEffect(() => {
         const fetchBakeries = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/bakeries'); // Adjust endpoint if necessary
+                const response = await fetch('http://192.168.1.96:5001/api/bakeries'); // Adjust endpoint if necessary
                 const data = await response.json();
                 setBakeries(data);
                 setFilteredBakeries(data); // Initially display all bakeries
