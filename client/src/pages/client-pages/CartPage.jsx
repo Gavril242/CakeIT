@@ -13,6 +13,7 @@ function CartPage() {
   const [modalMessage, setModalMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [hasCustomOrder, setHasCustomOrder] = useState(false);
+  const [multipleBakeriesWarning, setMultipleBakeriesWarning] = useState(false);
 
   useEffect(() => {
     const containsCustomOrder = cart.some((bakery) =>
@@ -20,6 +21,15 @@ function CartPage() {
     );
     setHasCustomOrder(containsCustomOrder);
   }, [cart]);
+  useEffect(() => {
+    // Check if cart contains products from multiple bakeries for Easybox option
+    const uniqueBakeries = new Set(cart.map((bakery) => bakery.bakeryId));
+    if (pickupOption === 'easybox' && uniqueBakeries.size > 1) {
+      setMultipleBakeriesWarning(true);
+    } else {
+      setMultipleBakeriesWarning(false);
+    }
+  }, [pickupOption, cart]);
 
   const getTransportCost = () => {
     if (pickupOption === 'delivery') return 15.0;
@@ -66,7 +76,19 @@ function CartPage() {
   };
 
   const handleCheckout = async () => {
-    if (hasCustomOrder && cart.length > 1) {
+    // Check for Easybox restrictions
+    if (multipleBakeriesWarning) {
+      setModalMessage(
+          'The Easybox option is only available for orders from a single bakery.'
+      );
+      setShowModal(true);
+      return;
+    }
+    const totalProducts = cart.reduce((total, bakery) => {
+      return total + bakery.products.reduce((sum, product) => sum + product.quantity, 0);
+    }, 0);
+    // Check for custom order restrictions
+    if (hasCustomOrder && totalProducts > 1) {
       setModalMessage(
           'Your cart contains a custom order. You can only checkout with the custom order for a single bakery.'
       );
@@ -102,37 +124,26 @@ function CartPage() {
         return;
       }
 
-      // Check if delivery date is the current time
-      const selectedDate = new Date(deliveryDate);
-      const currentDate = new Date();
+      const normalizedDate = new Date(deliveryDate).toISOString();
 
-      if (
-          selectedDate.toISOString().slice(0, 16) ===
-          currentDate.toISOString().slice(0, 16)
-      ) {
-        // Validate stock
-        const productsToCheck = cart.flatMap((bakery) =>
-            bakery.products.map((product) => ({
-              productId: product.id,
-              quantity: product.quantity || 1,
-            }))
-        );
-
-        const stockResponse = await fetch('http://localhost:5001/api/products/check-stock', {
+      // Check Easybox availability
+      if (pickupOption === 'easybox') {
+        const response = await fetch('http://localhost:5001/api/easybox/reservations/check', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ products: productsToCheck }),
+          body: JSON.stringify({
+            reservationDate: normalizedDate,
+          }),
         });
 
-        if (!stockResponse.ok) {
-          const stockData = await stockResponse.json();
+        const reservationCheck = await response.json();
+
+        if (!response.ok || reservationCheck.isReserved) {
           setModalMessage(
-              `Some products have insufficient stock: ${stockData.products
-                  .map((p) => `${p.name} (available: ${p.stock})`)
-                  .join(', ')}`
+              'The Easybox is not available on the selected date. Please choose another date or pickup method.'
           );
           setShowModal(true);
           return;
@@ -156,14 +167,14 @@ function CartPage() {
             ) + getTransportCost(),
         pickupOption,
         deliveryAddress: pickupOption === 'delivery' ? deliveryAddress : null,
-        deliveryDate,
+        deliveryDate: normalizedDate,
         notes: bakery.products
             .filter((product) => product.id === 'custom')
             .map((product) => product.notes || '')
-            .join(', ') || notes, // Default to global notes for normal orders
+            .join(', ') || notes,
       }));
 
-      const responses = await Promise.all(
+      const createdOrders = await Promise.all(
           orders.map((order) =>
               fetch('http://localhost:5001/api/orders', {
                 method: 'POST',
@@ -172,15 +183,41 @@ function CartPage() {
                   Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(order),
+              }).then((res) => {
+                if (!res.ok) throw new Error('Failed to create order');
+                return res.json(); // Capture the created order from the response
               })
           )
       );
 
-      const failedOrders = responses.filter((response) => !response.ok);
-      if (failedOrders.length > 0) {
-        setModalMessage('Some orders failed to be placed. Please try again.');
+      if (!createdOrders || createdOrders.length === 0) {
+        setModalMessage('Failed to create orders. Please try again.');
         setShowModal(true);
         return;
+      }
+
+      const createdOrderId = createdOrders[0]._id;
+
+      // Reserve Easybox
+      if (pickupOption === 'easybox') {
+        const reservationResponse = await fetch('http://localhost:5001/api/easybox/reserve', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            orderId: createdOrderId,
+            reservationDate: new Date(deliveryDate).toISOString(),
+            state: 'waiting for delivery',
+          }),
+        });
+
+        if (!reservationResponse.ok) {
+          setModalMessage('Failed to reserve Easybox. Please try again.');
+          setShowModal(true);
+          return;
+        }
       }
 
       clearCart();
@@ -191,6 +228,7 @@ function CartPage() {
         navigate('/home');
       }, 2000);
     } catch (error) {
+      console.error('Error during checkout:', error);
       setModalMessage('An error occurred while placing your orders. Please try again.');
       setShowModal(true);
     }
@@ -203,7 +241,12 @@ function CartPage() {
           {hasCustomOrder && (
               <p className="text-red-600 mb-4">
                 Note: Your cart contains a custom order. The price will be proposed by the bakery after analysis. If you are
-                not satisfied with the proposed price, you can cancel the order.
+                not satisfied with the proposed price, you can cancel the order. Only the custom order can be in the Cart.
+              </p>
+          )}
+          {multipleBakeriesWarning && (
+              <p className="text-red-600 mb-4">
+                Warning: The Easybox option is only available for orders from a single bakery.
               </p>
           )}
 

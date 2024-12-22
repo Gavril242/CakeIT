@@ -1,52 +1,82 @@
 const EasyboxReservation = require('../models/EasyboxReservation');
-
-// Reserve Easybox slot
-const reserveEasybox = async (req, res) => {
-    const { orderId, reservationDate, timeSlot, slotNumber } = req.body;
+const Order = require('../models/Order');
+// Update Easybox reservation and order status
+const updateEasybox = async (req, res) => {
+    const { orderId, state, orderStatus } = req.body;
 
     try {
-        const password = Math.random().toString(36).slice(-8); // Generate a random password
+        // Update Easybox reservation status
+        const reservation = await EasyboxReservation.findOneAndUpdate(
+            { orderId },
+            { state },
+            { new: true }
+        );
+
+        if (!reservation) {
+            return res.status(404).json({ message: 'Reservation not found' });
+        }
+
+        // Update Order status
+        const order = await Order.findByIdAndUpdate(
+            orderId,
+            { status: orderStatus },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json({
+            message: 'Reservation and order status updated successfully',
+            reservation,
+            order,
+        });
+    } catch (error) {
+        console.error('Error updating Easybox:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+// Reserve Easybox slot
+const reserveEasybox = async (req, res) => {
+    const { orderId, reservationDate, state } = req.body;
+
+    try {
         const reservation = new EasyboxReservation({
             orderId,
-            reservationDate,
-            timeSlot,
-            slotNumber,
-            password,
+            reservationDate: new Date(reservationDate).toISOString(), // Normalize the date
+            state,
         });
 
         await reservation.save();
         res.status(201).json(reservation);
     } catch (err) {
+        console.error('Error reserving Easybox:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Open Easybox
-const openEasybox = async (req, res) => {
-    const { orderId, password } = req.body;
+// Check Easybox availability
+const checkEasybox = async (req, res) => {
+    const { reservationDate } = req.body;
 
     try {
-        const reservation = await EasyboxReservation.findOne({ orderId, password });
-        if (!reservation) return res.status(400).json({ message: 'Invalid order ID or password' });
+        const startOfDay = new Date(reservationDate);
+        startOfDay.setUTCHours(0, 0, 0, 0);
 
-        res.status(200).json({ message: 'Easybox opened successfully' });
-    } catch (err) {
+        const endOfDay = new Date(reservationDate);
+        endOfDay.setUTCHours(23, 59, 59, 999);
+
+        const existingReservations = await EasyboxReservation.find({
+            reservationDate: { $gte: startOfDay, $lte: endOfDay },
+            state: { $ne: 'completed' },
+        });
+
+        res.json({ isReserved: existingReservations.length > 0 });
+    } catch (error) {
+        console.error('Error checking Easybox availability:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Close Easybox
-const closeEasybox = async (req, res) => {
-    const { orderId } = req.body;
-
-    try {
-        const reservation = await EasyboxReservation.findOne({ orderId });
-        if (!reservation) return res.status(400).json({ message: 'Reservation not found' });
-
-        res.status(200).json({ message: 'Easybox closed successfully' });
-    } catch (err) {
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-module.exports = { reserveEasybox, openEasybox, closeEasybox };
+module.exports = {updateEasybox, reserveEasybox, checkEasybox };
