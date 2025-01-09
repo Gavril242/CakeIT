@@ -9,7 +9,7 @@ function OrderListPage() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch('http://192.168.1.96:5001/api/orders/bakery', {
+                const response = await fetch('http://localhost:5001/api/orders/bakery', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },

@@ -16,7 +16,7 @@ export default function ViewOrderDetailsClient() {
                 if (!token) throw new Error('Authentication token missing');
 
                 // Fetch order details
-                const orderResponse = await fetch(`http://192.168.1.96:5001/api/orders/${orderId}`, {
+                const orderResponse = await fetch(`http://localhost:5001/api/orders/${orderId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
@@ -26,7 +26,7 @@ export default function ViewOrderDetailsClient() {
 
                 // If the order has status 'waiting for pickup' and pickup option 'easybox', fetch QR code
                 if (orderData.status === 'waiting for pickup' && orderData.pickupOption === 'easybox') {
-                    const response = await fetch(`http://192.168.1.96:5001/api/qr/qr/${orderId}`, {
+                    const response = await fetch(`http://localhost:5001/api/qr/qr/${orderId}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('token')}`,
                         },

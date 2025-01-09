@@ -14,7 +14,7 @@ function ProductListsPage() {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch('http://192.168.1.96:5001/api/products/bakery', {
+            const response = await fetch('http://localhost:5001/api/products/bakery', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -34,7 +34,7 @@ function ProductListsPage() {
 
     const handleUpdateStock = async () => {
         try {
-            const response = await fetch(`http://192.168.1.96:5001/api/products/${selectedProductId}/stock`, {
+            const response = await fetch(`http://localhost:5001/api/products/${selectedProductId}/stock`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function ProductListsPage() {
 
     const handleDeleteProduct = async () => {
         try {
-            const response = await fetch(`http://192.168.1.96:5001/api/products/${selectedProductId}`, {
+            const response = await fetch(`http://localhost:5001/api/products/${selectedProductId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -95,7 +95,7 @@ function ProductListsPage() {
                 {products.map((product) => (
                     <div key={product._id} className="bg-white p-6 rounded-lg shadow-md">
                         <img
-                            src={`http://192.168.1.96:5001/uploads/${product.image}` || '/fallback-image.jpg'}
+                            src={`http://localhost:5001/uploads/${product.image}` || '/fallback-image.jpg'}
                             alt={product.name}
                             className="h-40 w-full object-cover mb-4 rounded-lg"
                         />

@@ -20,7 +20,7 @@ export default function CustomerProfilePage() {
                 const token = localStorage.getItem('token');
 
                 // Fetch user data
-                const userResponse = await fetch(`http://192.168.1.96:5001/api/clients/${userId}`, {
+                const userResponse = await fetch(`http://localhost:5001/api/clients/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (!userResponse.ok) throw new Error('Failed to fetch user data');
@@ -29,7 +29,7 @@ export default function CustomerProfilePage() {
                 setEditDetails(userData);
 
                 // Fetch orders
-                const ordersResponse = await fetch('http://192.168.1.96:5001/api/orders/client', {
+                const ordersResponse = await fetch('http://localhost:5001/api/orders/client', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (!ordersResponse.ok) throw new Error('Failed to fetch orders');
@@ -63,7 +63,7 @@ export default function CustomerProfilePage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://192.168.1.96:5001/api/orders/${selectedOrderId}/cancel`, {
+            const response = await fetch(`http://localhost:5001/api/orders/${selectedOrderId}/cancel`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -95,7 +95,7 @@ export default function CustomerProfilePage() {
     const handleEditSubmit = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://192.168.1.96:5001/api/clients/${userId}`, {
+            const response = await fetch(`http://localhost:5001/api/clients/${userId}`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${token}`,

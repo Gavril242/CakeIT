@@ -54,7 +54,7 @@ class EasyboxScreen extends StatelessWidget {
     try {
       // Step 1: Check Easybox Status
       final response = await http.post(
-        Uri.parse('http://192.168.1.96:5001/api/easybox/reservations/status'),
+        Uri.parse('http://localhost:5001/api/easybox/reservations/status'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -86,7 +86,7 @@ class EasyboxScreen extends StatelessWidget {
 
       // Step 4: Update Backend
       final updateResponse = await http.patch(
-        Uri.parse('http://192.168.1.96:5001/api/easybox/update-box'),
+        Uri.parse('http://localhost:5001/api/easybox/update-box'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'orderId': qrData,
@@ -127,7 +127,7 @@ class EasyboxScreen extends StatelessWidget {
     try {
       // Step 1: Check if Easybox has any orders
       final response = await http.post(
-        Uri.parse('http://192.168.1.96:5001/api/easybox/reservations/status'),
+        Uri.parse('http://localhost:5001/api/easybox/reservations/status'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -161,7 +161,7 @@ class EasyboxScreen extends StatelessWidget {
       
       // Step 4: Update Backend for Pickup
       final updateResponse = await http.patch(
-        Uri.parse('http://192.168.1.96:5001/api/easybox/update-box'),
+        Uri.parse('http://localhost:5001/api/easybox/update-box'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'orderId': qrData,

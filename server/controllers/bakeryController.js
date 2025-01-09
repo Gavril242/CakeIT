@@ -9,7 +9,7 @@ const getAllBakeries = async (req, res) => {
         const updatedBakeries = bakeries.map((bakery) => {
             return {
                 ...bakery._doc, // Spread the bakery data
-                imageUrl: bakery.imageUrl ? `http://192.168.1.96:5001/uploads/${bakery.imageUrl}` : null, // Construct full URL
+                imageUrl: bakery.imageUrl ? `http://localhost:5001/uploads/${bakery.imageUrl}` : null, // Construct full URL
             };
         });
 
@@ -36,10 +36,10 @@ const getBakeryById = async (req, res) => {
         // Construct full image URLs for products
         const updatedBakery = {
             ...bakery._doc,
-            imageUrl: bakery.imageUrl ? `http://192.168.1.96:5001/uploads/${bakery.imageUrl}` : null,
+            imageUrl: bakery.imageUrl ? `http://localhost:5001/uploads/${bakery.imageUrl}` : null,
             products: bakery.products.map((product) => ({
                 ...product._doc,
-                image: product.image ? `http://192.168.1.96:5001/uploads/${product.image}` : null,
+                image: product.image ? `http://localhost:5001/uploads/${product.image}` : null,
             })),
         };
         console.log("here");

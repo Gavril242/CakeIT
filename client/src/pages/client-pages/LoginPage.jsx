@@ -24,7 +24,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch('http://192.168.1.96:5001/api/auth/login', {
+      const response = await fetch('http://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

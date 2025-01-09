@@ -30,7 +30,7 @@ function BakeryDetailsPage() {
   useEffect(() => {
     const fetchBakery = async () => {
       try {
-        const response = await fetch(`http://192.168.1.96:5001/api/bakeries/${bakeryId}`);
+        const response = await fetch(`http://localhost:5001/api/bakeries/${bakeryId}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch bakery details: ${response.statusText}`);
         }
