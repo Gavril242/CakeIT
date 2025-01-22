@@ -128,7 +128,7 @@ function CartPage() {
 
       // Check Easybox availability
       if (pickupOption === 'easybox') {
-        const response = await fetch('http://localhost:5001/api/easybox/reservations/check', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/easybox/reservations/check`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ function CartPage() {
 
       const createdOrders = await Promise.all(
           orders.map((order) =>
-              fetch('http://localhost:5001/api/orders', {
+              fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/orders`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ function CartPage() {
 
       // Reserve Easybox
       if (pickupOption === 'easybox') {
-        const reservationResponse = await fetch('http://localhost:5001/api/easybox/reserve', {
+        const reservationResponse = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/easybox/reserve`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ function HomeBakeryPage() {
         }
 
         try {
-            const response = await fetch(`http://localhost:5001/api/bakeries/${userId}`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/bakeries/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -70,7 +70,7 @@ function HomeBakeryPage() {
                 formData.append('imageUrl', file); // Add image if uploaded
             }
 
-            const response = await fetch(`http://localhost:5001/api/bakeries/${userId}`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/bakeries/${userId}`, {
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData, // Send form data with updated bakery info

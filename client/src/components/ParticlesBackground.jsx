@@ -1,36 +1,51 @@
-// src/components/ParticlesBackground.jsx
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 const ParticlesBackground = () => {
   const particlesRef = useRef(null);
 
   useEffect(() => {
     const initializeParticles = () => {
-      if (typeof window !== 'undefined' && window.particlesJS && particlesRef.current) {
-        window.particlesJS('particles-container', {
+      if (typeof window !== "undefined" && window.particlesJS && particlesRef.current) {
+        window.particlesJS("particles-container", {
           particles: {
             number: {
-              value: 150, // Number of particles
+              value: 100, // Number of sprinkles
               density: { enable: true, value_area: 800 },
             },
-            color: { value: '#000000' }, // White particles
-            shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
-            opacity: { value: 0.7, random: true },
-            size: { value: 3, random: true },
-            line_linked: { enable: true, distance: 120, color: '#ffffff', opacity: 0.4, width: 1 },
-            move: { enable: true, speed: 3, direction: 'none', random: true, out_mode: 'out' },
+            color: {
+              value: ["#FFB3C1", "#B4E1FF", "#B3FFC1", "#FFEAB3", "#E1C1FF"], // Pastel colors
+            },
+            shape: {
+              type: "circle", // Use polygons to simulate sprinkles
+              polygon: {
+                nb_sides: 4, // Define rectangle-like polygons
+              },
+              stroke: {
+                width: 2, // Border width for particles
+                color: "#ffffff", // Optional border color
+              },
+            },
+            opacity: {
+              value: 0.8,
+              random: true,
+            },
+            size: {
+              value: 10, // Length of sprinkles
+              random: true,
+            },
+            move: {
+              enable: true,
+              speed: 2, // Sprinkle movement speed
+              random: true,
+              out_mode: "out", // Particles move out of bounds
+            },
           },
           interactivity: {
-            detect_on: 'canvas',
+            detect_on: "canvas",
             events: {
-              onhover: { enable: true, mode: 'grab' },
-              onclick: { enable: true, mode: 'push' },
+              onhover: { enable: false }, // Disable hover interactivity
+              onclick: { enable: false }, // Disable click interactivity
               resize: true,
-            },
-            modes: {
-              grab: { distance: 180, line_linked: { opacity: 0.7 } },
-              repulse: { distance: 200, duration: 0.4 },
             },
           },
           retina_detect: true,
@@ -44,17 +59,17 @@ const ParticlesBackground = () => {
   }, []);
 
   return (
-    <div
-      id="particles-container"
-      ref={particlesRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: 'white', // Full-screen black background
-        zIndex: -1,
-        pointerEvents: 'none', // Allows interactions through the particles
-      }}
-    />
+      <div
+          id="particles-container"
+          ref={particlesRef}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "transparent", // Transparent background
+            zIndex: -1,
+            pointerEvents: "none", // Allows interactions through the particles
+          }}
+      />
   );
 };
 

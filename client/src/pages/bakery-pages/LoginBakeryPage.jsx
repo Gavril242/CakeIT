@@ -28,7 +28,7 @@ export default function LoginBakeryPage() {
 
         try {
             console.log("Sending login request to the backend...");
-            const response = await fetch('http://localhost:5001/api/auth/login', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

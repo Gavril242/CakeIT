@@ -8,7 +8,7 @@ export default function BakeryList() {
         // Fetch bakeries from the backend
         const fetchBakeries = async () => {
             try {
-                const response = await fetch('http://localhost:5001/api/bakeries');
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/bakeries`);
                 const data = await response.json();
                 setBakeries(data);
                 setLoading(false);

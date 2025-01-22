@@ -48,7 +48,7 @@ export default function AddProductPage() {
         productData.append('image', formData.image); // Append image file
 
         try {
-            const response = await fetch('http://localhost:5001/api/products', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/api/products`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`, // Add token for authentication

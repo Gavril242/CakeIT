@@ -23,10 +23,23 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(cookieParser());
+// Define the allowed origins for CORS
+const allowedOrigins = ['http://localhost:3000', 'http://192.168.1.132:3000'];
 
-// Rate Limiter
+// Apply the CORS middleware
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g., mobile apps, Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true, // Allow cookies and other credentials
+}));
+app.use(cookieParser());
+//Rate Limiter
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // Limit each IP to 100 requests
